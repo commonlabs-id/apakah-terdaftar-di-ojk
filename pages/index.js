@@ -307,7 +307,10 @@ const Index = () => {
           content="Cari tahu apakah suatu aplikasi fintech terdaftar di OJK"
         />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="og:image" content="/static/twitter-card.png" />
+        <meta
+          name="og:image"
+          content="https://apakah-terdaftar-di-ojk.netlify.com/static/twitter-card.png"
+        />
       </Head>
       <main>
         <h1>
