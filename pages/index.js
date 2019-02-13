@@ -222,7 +222,9 @@ const ResultCard = ({ result }) => {
                       new Date(),
                       { locale: id }
                     )} lalu`
-                  : `Terdaftar pada ${new Date(result["Tanggal Terdaftar atau Izin"]).toLocaleDateString()}`}
+                  : `Terdaftar pada ${new Date(
+                      result["Tanggal Terdaftar atau Izin"]
+                    ).toLocaleDateString()}`}
               </time>
               <span
                 onClick={() => {
@@ -273,6 +275,48 @@ const ResultCard = ({ result }) => {
           }
           address {
             margin: 0.5rem 0;
+          }
+        `}
+      </style>
+    </>
+  );
+};
+
+const Toast = () => {
+  const [show, setShow] = useState(true);
+  return (
+    <>
+      {show ? (
+        <span>
+          Anda korban Pinjol Ilegal? Hubungi{" "}
+          <a href="https://www.bantuanhukum.or.id/web/formulir-pengaduan-pos-korban-pinjaman-online-pinjol/">
+            LBH Jakarta
+          </a>
+          !{" "}
+          <a
+            href="#"
+            onClick={e => {
+              e.preventDefault();
+              setShow(false);
+            }}
+          >
+            (tutup)
+          </a>
+        </span>
+      ) : null}
+      <style jsx>
+        {`
+          span {
+            padding: 1rem;
+            margin: 1rem;
+            max-width: 46rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            background: black;
+            color: white;
+          }
+          a {
+            color: rgba(255, 255, 255, 0.8);
           }
         `}
       </style>
@@ -339,6 +383,7 @@ const Index = () => {
           setIsRegistered={setIsRegistered}
         />
       </main>
+      <Toast />
       <footer>
         Data diperoleh dari{" "}
         <a href="https://www.ojk.go.id/id/kanal/iknb/data-dan-statistik/direktori/fintech/Default.aspx">
