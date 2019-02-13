@@ -3,7 +3,7 @@ import Fuse from "fuse.js";
 import throttle from "throttleit";
 import debounce from "debounce-fn";
 import { formatDistance } from "date-fns";
-import { id } from "date-fns/locale";
+import id from "date-fns/locale/id";
 
 // const debounce = (func, delay) => {
 //   let inDebounce;
@@ -212,7 +212,7 @@ const ResultCard = ({ result }) => {
           <b>{result["Nomor Surat Terdaftar atau Izin"]}</b> ·{"  "}
           <time>
             {showRelative
-              ? `Registered ${date} ago`
+              ? `Terdaftar ${date} lalu`
               : `Terdaftar pada ${registeredDate.toLocaleDateString()}`}
           </time>
           <span
@@ -349,6 +349,9 @@ const Index = () => {
           min-height: 80vh;
           margin-bottom: 2rem;
           flex-direction: column;
+        }
+        footer {
+          margin: 2rem 0;
         }
       `}</style>
     </>
