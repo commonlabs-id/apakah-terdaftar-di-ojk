@@ -201,38 +201,53 @@ const SearchWithDropdown = ({
 };
 
 const ResultCard = ({ result }) => {
-  console.log(result);
-  const registeredDate = new Date(result["Tanggal Terdaftar atau Izin"]);
-  const date = formatDistance(registeredDate, new Date(), { locale: id });
   const [showRelative, setShowRelative] = useState(true);
+
   return (
     <>
       <div>
-        <label>
-          <b>{result["Nomor Surat Terdaftar atau Izin"]}</b> ·{"  "}
-          <time>
-            {showRelative
-              ? `Terdaftar ${date} lalu`
-              : `Terdaftar pada ${registeredDate.toLocaleDateString()}`}
-          </time>
-          <span
-            onClick={() => {
-              setShowRelative(!showRelative);
-            }}
-          >
-            {" "}
-            ⏱(klik)
-          </span>
-          {result["Jenis Usaha"] === "Syariah" ? (
-            <>
-              <span>{" · "}Syariah ☪️</span>
-            </>
-          ) : null}
-        </label>
-        <h1>{typeof result === "string" ? result : result["Nama Platform"]}</h1>
-        <h2>{result["Nama Perusahaan"]}</h2>
-        <label className="address-label">Alamat</label>
-        <address dangerouslySetInnerHTML={{ __html: `${result["Alamat"]}` }} />
+        {typeof result === "string" ? (
+          <>
+            <h1>{result}</h1>
+            <h2>Tidak ditemukan</h2>
+          </>
+        ) : (
+          <>
+            <label>
+              <b>{result["Nomor Surat Terdaftar atau Izin"]}</b> ·{"  "}
+              <time>
+                {showRelative
+                  ? `Terdaftar ${formatDistance(
+                      new Date(result["Tanggal Terdaftar atau Izin"]),
+                      new Date(),
+                      { locale: id }
+                    )} lalu`
+                  : `Terdaftar pada ${registeredDate.toLocaleDateString()}`}
+              </time>
+              <span
+                onClick={() => {
+                  setShowRelative(!showRelative);
+                }}
+              >
+                {" "}
+                ⏱(klik)
+              </span>
+              {result["Jenis Usaha"] === "Syariah" ? (
+                <>
+                  <span>{" · "}Syariah ☪️</span>
+                </>
+              ) : null}
+            </label>
+            <h1>
+              {typeof result === "string" ? result : result["Nama Platform"]}
+            </h1>
+            <h2>{result["Nama Perusahaan"]}</h2>
+            <label className="address-label">Alamat</label>
+            <address
+              dangerouslySetInnerHTML={{ __html: `${result["Alamat"]}` }}
+            />
+          </>
+        )}
       </div>
       <style jsx>
         {`
