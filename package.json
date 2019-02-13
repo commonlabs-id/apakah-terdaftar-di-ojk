@@ -18,6 +18,8 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "export": "next export",
+    "netlify": "npm run build && npm run export",
     "start": "next start"
   }
 }
