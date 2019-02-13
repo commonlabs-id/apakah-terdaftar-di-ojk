@@ -1,0 +1,23 @@
+{
+  "name": "apakah-terdaftar-ojk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "<muhammad.mustadi@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "date-fns": "^2.0.0-alpha.27",
+    "debounce": "^1.2.0",
+    "debounce-fn": "^1.0.0",
+    "fuse.js": "^3.4.2",
+    "next": "^8.0.0",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "throttleit": "^1.0.0",
+    "xls-to-json": "^0.5.1"
+  },
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  }
+}
