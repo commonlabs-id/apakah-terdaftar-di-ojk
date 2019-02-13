@@ -222,7 +222,7 @@ const ResultCard = ({ result }) => {
                       new Date(),
                       { locale: id }
                     )} lalu`
-                  : `Terdaftar pada ${registeredDate.toLocaleDateString()}`}
+                  : `Terdaftar pada ${new Date(result["Tanggal Terdaftar atau Izin"]).toLocaleDateString()}`}
               </time>
               <span
                 onClick={() => {
@@ -345,7 +345,10 @@ const Index = () => {
           Situs OJK
         </a>
         . Pembaharuan terakhir: Juni 2018. Dibuat oleh{" "}
-        <a href="https://twitter.com/mathdroid">mathdroid</a>
+        <a href="https://twitter.com/mathdroid">mathdroid</a>. Kode sumber:{" "}
+        <a href="https://github.com/mathdroid/apakah-terdaftar-di-ojk">
+          Github
+        </a>
       </footer>
       <style jsx global>{`
         @font-face {
