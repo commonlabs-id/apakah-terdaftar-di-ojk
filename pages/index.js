@@ -31,7 +31,6 @@ const fuseOptions = {
 const fuse = new Fuse(ojk, fuseOptions);
 
 const search = (v, fn) => {
-  console.log(v);
   const result = fuse.search(v).filter(r => r.score <= 0.25);
   fn(result);
 };
