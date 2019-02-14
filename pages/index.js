@@ -407,6 +407,11 @@ const Index = () => {
           font-weight: 900;
           src: url("/static/Inter-Black.woff") format("woff");
         }
+        html, body {
+          margin: 0;
+          padding: 0;
+          min-height: 100%;
+        }
         html {
           font-family: "Inter", monospace;
           background: #fafafa;
@@ -428,13 +433,16 @@ const Index = () => {
           justify-content: center;
           align-items: center;
           flex-direction: column;
+          height: 100%;
+          min-height: 100vh;
         }
       `}</style>
       <style jsx>{`
         main {
           display: flex;
+          flex: 1 1 auto;
           max-width: 48rem;
-          min-height: 80vh;
+          min-height: 70vh;
           margin-bottom: 2rem;
           flex-direction: column;
         }
