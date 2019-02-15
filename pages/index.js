@@ -131,7 +131,7 @@ const SearchWithDropdown = ({
               padding: 1rem;
             }
             .button {
-              padding: 0.5rem;
+              padding: 1rem;
               font-size: 1.5rem;
             }
           }
