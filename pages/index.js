@@ -100,8 +100,8 @@ const SearchWithDropdown = ({
           input {
             flex: 7;
             font-family: "Inter";
-            font-size: 1.5rem;
-            padding: 1rem;
+            font-size: 1.25rem;
+            padding: 0.5rem;
             border-radius: 0.25rem;
             border: none;
             box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.5);
@@ -116,14 +116,24 @@ const SearchWithDropdown = ({
             border: none;
             background: rgba(0, 0, 0, 0.9);
             border-radius: 0.25rem;
-            padding: 1rem;
+            padding: 0.5rem;
             color: rgba(255, 255, 255, 0.9);
             font-family: "Inter";
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             cursor: pointer;
           }
           .button:hover {
             background: rgba(0, 0, 0, 0.7);
+          }
+          @media (min-width: 1024px) {
+            input {
+              font-size: 1.5rem;
+              padding: 1rem;
+            }
+            .button {
+              padding: 0.5rem;
+              font-size: 1.5rem;
+            }
           }
         `}</style>
       </form>
@@ -407,6 +417,12 @@ const Index = () => {
           font-weight: 900;
           src: url("/static/Inter-Black.woff") format("woff");
         }
+        html {
+          box-sizing: border-box;
+        }
+        * {
+          box-sizing: inherit;
+        }
         html, body {
           margin: 0;
           padding: 0;
@@ -422,7 +438,7 @@ const Index = () => {
           font-weight: 400;
         }
         h1 {
-          font-size: 4rem;
+          font-size: 2.5rem;
           margin-bottom: 0.5rem;
         }
         u {
@@ -436,6 +452,11 @@ const Index = () => {
           height: 100%;
           min-height: 100vh;
         }
+        @media (min-width: 1024px) {
+          h1 {
+            font-size: 4rem;
+          }
+        }
       `}</style>
       <style jsx>{`
         main {
@@ -443,11 +464,12 @@ const Index = () => {
           flex: 1 1 auto;
           max-width: 48rem;
           min-height: 70vh;
-          margin-bottom: 2rem;
+          padding: 1.5rem;
           flex-direction: column;
         }
         footer {
-          margin: 2rem 0;
+          margin-top: 2rem;
+          padding: 1.5rem;
         }
       `}</style>
     </>
