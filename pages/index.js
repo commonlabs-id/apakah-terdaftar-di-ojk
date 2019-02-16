@@ -71,7 +71,6 @@ const SearchWithDropdown = ({
           onChange={changeHandler}
           placeholder={"Masukkan nama aplikasi (Kredit Hiu)"}
         />
-        <p>{platforms.length}</p>
         <input className="button" type="submit" value="Check" />
         <style jsx>{`
           form {
