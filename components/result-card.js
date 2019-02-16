@@ -16,16 +16,16 @@ const ResultCard = ({ result }) => {
         ) : (
           <>
             <label>
-              <b>{result["Nomor Surat Terdaftar atau Izin"]}</b> ·{"  "}
+              <b>{result["registration"]}</b> ·{"  "}
               <time>
                 {showRelative
                   ? `Terdaftar ${formatDistance(
-                      new Date(result["Tanggal Terdaftar atau Izin"]),
+                      new Date(result["registered_at"].seconds * 1000),
                       new Date(),
                       { locale: id }
                     )} lalu`
                   : `Terdaftar pada ${new Date(
-                      result["Tanggal Terdaftar atau Izin"]
+                      result["registered_at"].seconds * 1000
                     ).toLocaleDateString()}`}
               </time>
               <span
@@ -36,19 +36,21 @@ const ResultCard = ({ result }) => {
                 {" "}
                 ⏱(klik)
               </span>
-              {result["Jenis Usaha"] === "Syariah" ? (
+              {result["is_syariah"] ? (
                 <>
                   <span>{" · "}Syariah ☪️</span>
                 </>
               ) : null}
             </label>
             <h1>
-              {typeof result === "string" ? result : result["Nama Platform"]}
+              {typeof result === "string" ? result : result["platform_name"]}
             </h1>
-            <h2>{result["Nama Perusahaan"]}</h2>
+            <h2>{result["company_name"]}</h2>
             <label className="address-label">Alamat</label>
             <address
-              dangerouslySetInnerHTML={{ __html: `${result["Alamat"]}` }}
+              dangerouslySetInnerHTML={{
+                __html: `${result["alamat"] || "Alamat tidak ditemukan."}`
+              }}
             />
           </>
         )}

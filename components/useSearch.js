@@ -16,7 +16,7 @@ function useSearch(items, config) {
   // when search changes, set filtered Items
   useEffect(() => {
     if (search === "") {
-      setItems(items);
+      setItems([]);
     } else {
       setItems(indexer.current.search(search));
     }
