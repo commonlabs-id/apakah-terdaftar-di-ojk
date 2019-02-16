@@ -7,7 +7,7 @@ import ResultCard from "../components/result-card";
 import SEO from "../components/seo";
 import SiteFooter from "../components/site-footer";
 import Toast from "../components/toast";
-import ojk from "../static/ojk.json";
+import useSearch from "../components/useSearch";
 
 const fuseOptions = {
   shouldSort: true,
@@ -17,17 +17,8 @@ const fuseOptions = {
   includeScore: true,
   matchAllTokens: true,
   minMatchCharLength: 2,
-  keys: ["Nama Platform", "Nama Perusahaan"]
+  keys: ["platform_name", "company_name"]
 };
-
-const fuse = new Fuse(ojk, fuseOptions);
-
-const search = (v, fn) => {
-  const result = fuse.search(v).filter(r => r.score <= 0.25);
-  fn(result);
-};
-
-const debouncedSearch = debounce(search, { wait: 300 });
 
 const SearchSuggestionItem = ({ handler, company, platform }) => (
   <>
@@ -52,30 +43,27 @@ const SearchWithDropdown = ({
   setResult,
   setIsRegistered,
   value,
-  setValue
+  setSearch,
+  platforms
 }) => {
-  const [res, setRes] = useState([]);
   const changeHandler = e => {
     setResult(undefined);
     setIsRegistered(undefined);
-    setValue(e.target.value);
-    debouncedSearch(e.target.value, setRes);
+    setSearch(e.target.value);
   };
-
   return (
     <>
       <form
         onSubmit={e => {
           e.preventDefault();
           if (!value) return;
-          const hasResult = res.length > 0;
+          const hasResult = platforms.length > 0;
           const hasSubstr =
             hasResult &&
-            res[0].item["Nama Platform"].toLowerCase().includes(value);
-          setResult(hasSubstr ? res[0].item : value);
-          setValue("");
+            platforms[0].item["platform_name"].toLowerCase().includes(value);
+          setResult(hasSubstr ? platforms[0].item : value);
+          setSearch("");
           setIsRegistered(hasSubstr);
-          setRes([]);
         }}
       >
         <input
@@ -83,6 +71,7 @@ const SearchWithDropdown = ({
           onChange={changeHandler}
           placeholder={"Masukkan nama aplikasi (Kredit Hiu)"}
         />
+        <p>{platforms.length}</p>
         <input className="button" type="submit" value="Check" />
         <style jsx>{`
           form {
@@ -130,22 +119,16 @@ const SearchWithDropdown = ({
           }
         `}</style>
       </form>
-      {res.length > 0 ? (
+      {platforms.length > 0 ? (
         <ul>
-          {res.map(r => {
-            const { item, matches } = r;
+          {platforms.map(r => {
+            const { item, matches = [] } = r;
             if (matches.length < 1) {
-              return (
-                <SearchSuggestionItem
-                  key={item["Nama Platform"]}
-                  company={item["Nama Perusahaan"]}
-                  platform={item["Nama Platform"]}
-                />
-              );
+              return null;
             } else {
               let chunks = {
-                "Nama Perusahaan": [],
-                "Nama Platform": []
+                company_name: [],
+                platform_name: []
               };
               matches.forEach(m => {
                 const str = item[m.key].split("");
@@ -164,23 +147,22 @@ const SearchWithDropdown = ({
               });
               return (
                 <SearchSuggestionItem
-                  key={item["Nama Platform"]}
+                  key={item["platform_name"]}
                   handler={() => {
-                    const isActive = res.length > 0;
+                    const isActive = platforms.length > 0;
                     setResult(item);
-                    setValue("");
+                    setSearch("");
                     setIsRegistered(isActive);
-                    setRes([]);
                   }}
                   company={
-                    chunks["Nama Perusahaan"].length > 0
-                      ? chunks["Nama Perusahaan"]
-                      : item["Nama Perusahaan"]
+                    chunks["company_name"].length > 0
+                      ? chunks["company_name"]
+                      : item["company_name"]
                   }
                   platform={
-                    chunks["Nama Platform"].length > 0
-                      ? chunks["Nama Platform"]
-                      : item["Nama Platform"]
+                    chunks["platform_name"].length > 0
+                      ? chunks["platform_name"]
+                      : item["platform_name"]
                   }
                 />
               );
@@ -206,6 +188,13 @@ const Index = ({ platformsData }) => {
   const [value, setValue] = useState("");
   const [result, setResult] = useState(undefined);
   const [isRegistered, setIsRegistered] = useState(undefined);
+
+  const [platforms, setSearch] = useSearch(platformsData, fuseOptions);
+  const debouncedSearch = debounce(setSearch, { wait: 100 });
+  const search = v => {
+    setValue(v);
+    debouncedSearch(v);
+  };
   return (
     <>
       <SEO />
@@ -215,7 +204,7 @@ const Index = ({ platformsData }) => {
           {
             <u>
               {value ||
-                ((result && result["Nama Platform"]) || result) ||
+                ((result && result["platform_name"]) || result) ||
                 "_____"}
             </u>
           }{" "}
@@ -231,9 +220,10 @@ const Index = ({ platformsData }) => {
         {result ? <ResultCard result={result} /> : null}
         <SearchWithDropdown
           value={value}
-          setValue={setValue}
+          setSearch={search}
           setResult={setResult}
           setIsRegistered={setIsRegistered}
+          platforms={platforms}
         />
       </main>
       <Toast />
@@ -309,9 +299,10 @@ const Index = ({ platformsData }) => {
 
 Index.getInitialProps = async function() {
   const res = await fetch("https://pinjollist.now.sh/api/companies");
-  const platformsData = await res.json();
-
-  console.log(`Show data fetched. Count: ${platformsData.length}`);
+  const { data: platformsData } = await res.json();
+  const indexer = new Fuse(platformsData, fuseOptions);
+  // console.log(platformsData);
+  console.log(`Platforms data fetched. Count: ${platformsData.length}`);
 
   return {
     platformsData
