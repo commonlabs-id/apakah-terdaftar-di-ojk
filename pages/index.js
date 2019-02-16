@@ -1,20 +1,12 @@
 import { useState } from "react";
-import Head from "next/head";
 import Fuse from "fuse.js";
 import debounce from "debounce-fn";
-import { formatDistance } from "date-fns";
-import id from "date-fns/locale/id";
+import fetch from "isomorphic-unfetch";
 
-// const debounce = (func, delay) => {
-//   let inDebounce;
-//   return function() {
-//     const context = this;
-//     const args = arguments;
-//     clearTimeout(inDebounce);
-//     inDebounce = setTimeout(() => func.apply(context, args), delay);
-//   };
-// };
-
+import ResultCard from "../components/result-card";
+import SEO from "../components/seo";
+import SiteFooter from "../components/site-footer";
+import Toast from "../components/toast";
 import ojk from "../static/ojk.json";
 
 const fuseOptions = {
@@ -55,6 +47,7 @@ const SearchSuggestionItem = ({ handler, company, platform }) => (
     `}</style>
   </>
 );
+
 const SearchWithDropdown = ({
   setResult,
   setIsRegistered,
@@ -209,162 +202,13 @@ const SearchWithDropdown = ({
   );
 };
 
-const ResultCard = ({ result }) => {
-  const [showRelative, setShowRelative] = useState(true);
-
-  return (
-    <>
-      <div>
-        {typeof result === "string" ? (
-          <>
-            <h1>{result}</h1>
-            <h2>Tidak ditemukan</h2>
-          </>
-        ) : (
-          <>
-            <label>
-              <b>{result["Nomor Surat Terdaftar atau Izin"]}</b> ·{"  "}
-              <time>
-                {showRelative
-                  ? `Terdaftar ${formatDistance(
-                      new Date(result["Tanggal Terdaftar atau Izin"]),
-                      new Date(),
-                      { locale: id }
-                    )} lalu`
-                  : `Terdaftar pada ${new Date(
-                      result["Tanggal Terdaftar atau Izin"]
-                    ).toLocaleDateString()}`}
-              </time>
-              <span
-                onClick={() => {
-                  setShowRelative(!showRelative);
-                }}
-              >
-                {" "}
-                ⏱(klik)
-              </span>
-              {result["Jenis Usaha"] === "Syariah" ? (
-                <>
-                  <span>{" · "}Syariah ☪️</span>
-                </>
-              ) : null}
-            </label>
-            <h1>
-              {typeof result === "string" ? result : result["Nama Platform"]}
-            </h1>
-            <h2>{result["Nama Perusahaan"]}</h2>
-            <label className="address-label">Alamat</label>
-            <address
-              dangerouslySetInnerHTML={{ __html: `${result["Alamat"]}` }}
-            />
-          </>
-        )}
-      </div>
-      <style jsx>
-        {`
-          div {
-            background: white;
-            border-radius: 0.25rem;
-            box-shadow: 0 0.5rem 100rem rgba(0, 0, 0, 0.25);
-            padding: 1rem;
-            margin: 2rem 0;
-          }
-          h1 {
-            margin: 0.5rem 0;
-          }
-          h2 {
-            margin-bottom: 2rem;
-          }
-          label {
-            margin: 1rem 0;
-          }
-          .address-label {
-            text-transform: uppercase;
-            color: rgba(0, 0, 0, 0.5);
-          }
-          address {
-            margin: 0.5rem 0;
-          }
-        `}
-      </style>
-    </>
-  );
-};
-
-const Toast = () => {
-  const [show, setShow] = useState(true);
-  return (
-    <>
-      {show ? (
-        <span>
-          Anda korban Pinjol Ilegal? Hubungi{" "}
-          <a href="https://www.bantuanhukum.or.id/web/formulir-pengaduan-pos-korban-pinjaman-online-pinjol/">
-            LBH Jakarta
-          </a>
-          !{" "}
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault();
-              setShow(false);
-            }}
-          >
-            (tutup)
-          </a>
-        </span>
-      ) : null}
-      <style jsx>
-        {`
-          span {
-            padding: 1rem;
-            margin: 1rem;
-            max-width: 46rem;
-            border-radius: 0.25rem;
-            font-size: 0.75rem;
-            background: black;
-            color: white;
-          }
-          a {
-            color: rgba(255, 255, 255, 0.8);
-          }
-        `}
-      </style>
-    </>
-  );
-};
-
-const Index = () => {
+const Index = ({ platformsData }) => {
   const [value, setValue] = useState("");
   const [result, setResult] = useState(undefined);
   const [isRegistered, setIsRegistered] = useState(undefined);
   return (
     <>
-      <Head>
-        <title>Apakah aplikasi fintech ini terdaftar di OJK</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta name="twitter:site" content="@zeithq" />
-        <meta
-          name="og:title"
-          content="Apakah aplikasi fintech ini terdaftar di OJK"
-        />
-        <meta
-          name="og:url"
-          content="https://apakah-terdaftar-di-ojk.netlify.com"
-        />
-        <meta
-          name="description"
-          content="Cari tahu apakah suatu aplikasi fintech terdaftar di OJK"
-        />
-        <meta
-          name="og:description"
-          content="Cari tahu apakah suatu aplikasi fintech terdaftar di OJK"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="og:image"
-          content="https://apakah-terdaftar-di-ojk.netlify.com/static/twitter-card.png"
-        />
-      </Head>
+      <SEO />
       <main>
         <h1>
           Apakah{" "}
@@ -393,17 +237,7 @@ const Index = () => {
         />
       </main>
       <Toast />
-      <footer>
-        Data diperoleh dari{" "}
-        <a href="https://www.ojk.go.id/id/kanal/iknb/data-dan-statistik/direktori/fintech/Default.aspx">
-          Situs OJK
-        </a>
-        . Pembaharuan terakhir: Juni 2018. Dibuat oleh{" "}
-        <a href="https://twitter.com/mathdroid">mathdroid</a>. Kode sumber:{" "}
-        <a href="https://github.com/mathdroid/apakah-terdaftar-di-ojk">
-          Github
-        </a>
-      </footer>
+      <SiteFooter />
       <style jsx global>{`
         @font-face {
           font-family: "Inter";
@@ -423,7 +257,8 @@ const Index = () => {
         * {
           box-sizing: inherit;
         }
-        html, body {
+        html,
+        body {
           margin: 0;
           padding: 0;
           min-height: 100%;
@@ -467,13 +302,20 @@ const Index = () => {
           padding: 1.5rem;
           flex-direction: column;
         }
-        footer {
-          margin-top: 2rem;
-          padding: 1.5rem;
-        }
       `}</style>
     </>
   );
+};
+
+Index.getInitialProps = async function() {
+  const res = await fetch("https://pinjollist.now.sh/api/companies");
+  const platformsData = await res.json();
+
+  console.log(`Show data fetched. Count: ${platformsData.length}`);
+
+  return {
+    platformsData
+  };
 };
 
 export default Index;

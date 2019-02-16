@@ -6,13 +6,12 @@
   "license": "MIT",
   "dependencies": {
     "date-fns": "^2.0.0-alpha.27",
-    "debounce": "^1.2.0",
     "debounce-fn": "^1.0.0",
     "fuse.js": "^3.4.2",
+    "isomorphic-unfetch": "^3.0.0",
     "next": "^8.0.0",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
-    "throttleit": "^1.0.0",
     "xls-to-json": "^0.5.1"
   },
   "scripts": {
